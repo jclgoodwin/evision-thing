@@ -7,20 +7,23 @@ PASSWORD=$2
 EMAIL=$3
 
 if [[ $USERNAME = '' || $PASSWORD = '' || $EMAIL = '' ]]; then
-    echo "Please supply a username, password and email address"
+    echo 'Please supply a username, password and email address.'
     exit 1
 fi
 
-casperjs evision-thing.js --username="$USERNAME" --password="$PASSWORD" > output-latest.txt
+OUTPUT=`casperjs evision-thing.js --username="$USERNAME" --password="$PASSWORD"`
+echo $OUTPUT;
 
 
-if [ -a output-previous.txt ]; then
-    DIFF=`diff -U 4 output-previous.txt output-latest.txt`
+if [[ $OUTPUT == 'null' ]]; then
+   echo 'There was a problem. Perhaps you are running this thing too frequently.'
+   exit 1
+elif [ -a output-latest.txt ]; then # script has been run before
+    DIFF=`diff -U 4 output-latest.txt <(echo "${OUTPUT}")`
     if [ ${PIPESTATUS[0]} -eq 1 ]; then
-        echo "Changes found, emailing"
-        echo "${DIFF}" | mail -s "Exam update!" $EMAIL
-        cp output-latest.txt output-previous.txt
+        echo 'Changes found, emailing'
+        echo "${DIFF}" | mail -s 'Exam update!' $EMAIL
     fi
-else
-    cp output-latest.txt output-previous.txt
 fi
+
+echo "${OUTPUT}" > output-latest.txt

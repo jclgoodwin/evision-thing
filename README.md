@@ -1,7 +1,7 @@
 e:Vision thing
 ==============
 
-This is a way to be automatically notified when assessment marks appear on the University of York's e:Vision system.
+This sends an email when assessment marks appear on the University of York's e:Vision system.
 [Other universities also use something called e:Vision](https://www.google.co.uk/search?q=evision), so it should be straightforward to adapt.
 
 Usage
@@ -9,8 +9,9 @@ Usage
 
 I use a little Linux server. You could use a Raspberry Pi. 
 
-You need [CasperJS](http://casperjs.org/) and [PhantomJS](http://phantomjs.org/)
-The supplied npm `package.json` file means you can install them easily like this:
+You need [CasperJS](http://casperjs.org/) and [PhantomJS](http://phantomjs.org/).
+(Apparently you can use SlimerJS instead of PhantomJS, but I haven't tried.)
+The supplied npm `package.json` file means you can install them as easily as this:
 
     npm install
 

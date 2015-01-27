@@ -7,6 +7,8 @@ var x = require('casper').selectXPath,
     username = casper.cli.options.username,
     password = casper.cli.options.password;
 
+casper.options.waitTimeout = 20000;
+
 if (!(username && password)) {
     casper.die();
 }
