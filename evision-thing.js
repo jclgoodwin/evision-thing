@@ -1,18 +1,17 @@
-var x = require('casper').selectXPath,
-    casper = require('casper').create({
+var casper = require('casper').create({
+        waitTimeout: 100000,
         pageSettings: {
             loadImages: false
-        }
+        },
     }),
     username = casper.cli.options.username,
     password = casper.cli.options.password;
-
-casper.options.waitTimeout = 100000;
 
 if (!(username && password)) {
     casper.die();
 }
 
+// log in:
 casper.start('http://evision.york.ac.uk', function () {
     if (this.getCurrentUrl() !== 'https://shib.york.ac.uk/idp/Authn/UserPassword') {
         casper.die();
@@ -22,36 +21,34 @@ casper.start('http://evision.york.ac.uk', function () {
         'j_password': password
     }, true);
 });
-
-casper.waitForUrl('https://evision.york.ac.uk/urd/sits.urd/run/siw_sso.signon', function() {
+casper.waitForText('Module and Assessment Results', function () {
     this.clickLabel('Module and Assessment Results');
 });
 
-
-// modules overview
-
-casper.thenClick('[name="butselect"]'); // computer science
+// select the first (and, in my case, only) 'programme'
+// some students probably have multiple buttons (if they do an LFA course, for example), but this script doesn't support that yet
+casper.thenClick('[name="butselect"]');
 
 casper.then(function () {
+    // 'current module results' overview:
     this.echo(this.evaluate(function () {
-       return document.getElementById('sitspagecontent').getElementsByTagName('table')[3].textContent;
+        return document.getElementById('sitspagecontent').getElementsByTagName('table')[1].textContent;
     }));
-    modulesCount = this.evaluate(function () {
+    var modulesCount = this.evaluate(function () {
         return document.getElementsByName('butselect').length;
     });
-});
 
-// module by module
-
-casper.then(function () {
-    for (; modulesCount > 0; modulesCount -= 1) {
-        this.thenClick(x('//*[@id="sitspagecontent"]/form/table[4]/tbody/tr[' + (modulesCount + 1)  + ']/td[6]/input'));
+    // visit each 'component details' page:
+    while (modulesCount > 0) {
+        this.thenClick('table > tbody > tr:nth-child(' + modulesCount + ') input');
+        // 'assessment components' table
         this.then(function () {
-            this.echo(casper.evaluate(function () {
-                return document.getElementById('sitspagecontent').getElementsByTagName('table')[5].textContent;
+            this.echo(this.evaluate(function () {
+                return document.getElementById('sitspagecontent').getElementsByTagName('table')[2].textContent;
             }));
         });
-        casper.back();
+        this.back();
+        modulesCount -= 1;
     }
 });
 
