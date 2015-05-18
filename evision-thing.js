@@ -32,7 +32,7 @@ casper.thenClick('[name="butselect"]');
 casper.then(function () {
     // 'current module results' overview:
     this.echo(this.evaluate(function () {
-        return document.getElementById('sitspagecontent').getElementsByTagName('table')[1].textContent;
+        return document.getElementById('sitspagecontent').getElementsByTagName('table')[1].outerHTML;
     }));
     var modulesCount = this.evaluate(function () {
         return document.getElementsByName('butselect').length;
@@ -40,14 +40,16 @@ casper.then(function () {
 
     // visit each 'component details' page:
     while (modulesCount > 0) {
-        this.thenClick('table > tbody > tr:nth-child(' + modulesCount + ') input');
-        // 'assessment components' table
-        this.then(function () {
-            this.echo(this.evaluate(function () {
-                return document.getElementById('sitspagecontent').getElementsByTagName('table')[2].textContent;
-            }));
-        });
-        this.thenClick('[value=Back]');
+        if (this.exists('table > tbody > tr:nth-child(' + modulesCount + ') input')) {
+            // 'assessment components' table
+            this.thenClick('table > tbody > tr:nth-child(' + modulesCount + ') input');
+            this.then(function () {
+                this.echo(this.evaluate(function () {
+                    return document.getElementById('sitspagecontent').getElementsByTagName('table')[2].outerHTML;
+                }));
+            });
+            this.thenClick('[value=Back]');
+        }
         modulesCount -= 1;
     }
 });

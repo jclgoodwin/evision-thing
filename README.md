@@ -21,7 +21,7 @@ Given a username and password, `evision-thing.js` will log in, navigate around a
 
 That's not much use on its own, so `evision-thing.sh` exists.
 It's a sort of wrapper.
-If the output of `evision-thing.js` has changed since the last time `evision-thing.sh` ran, `evision-thing.sh` will try to send send an email.
+If the output of `evision-thing.js` has changed since the last time `evision-thing.sh` ran, `evision-thing.sh` will try to send send an email showing the changes.
 
 I have added something like this to my crontab:
 

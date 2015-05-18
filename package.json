@@ -1,6 +1,7 @@
 {
     "dependencies": {
         "casperjs": "1.1.0-beta3",
-        "phantomjs": "2.0.0-alpha"
+        "phantomjs": "1.9.x",
+        "html-to-text": "1.3.*"
     }
 }

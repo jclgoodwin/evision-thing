@@ -11,8 +11,7 @@ if [[ $USERNAME = '' || $PASSWORD = '' || $EMAIL = '' ]]; then
     exit 1
 fi
 
-OUTPUT=`casperjs evision-thing.js --username="$USERNAME" --password="$PASSWORD"`
-
+OUTPUT=`casperjs evision-thing.js --username="$USERNAME" --password="$PASSWORD" | html-to-text --tables=.default`
 
 if [[ $OUTPUT == 'null' ]]; then
    echo 'There was a problem. Perhaps you are running this thing too frequently.'
@@ -21,7 +20,7 @@ elif [ -a output-latest.txt ]; then # script has been run before
     DIFF=`diff -U 4 output-latest.txt <(echo "$OUTPUT")`
     if [ ${PIPESTATUS[0]} -eq 1 ]; then
         echo 'Changes found, emailing'
-        echo "$DIFF" | mail -s 'Exam update!' $EMAIL
+        echo "<pre>$DIFF</pre>" | mail -a 'Content-Type: text/html' -s 'Exam update!' $EMAIL
     fi
 fi
 
