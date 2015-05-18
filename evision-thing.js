@@ -47,7 +47,7 @@ casper.then(function () {
                 return document.getElementById('sitspagecontent').getElementsByTagName('table')[2].textContent;
             }));
         });
-        this.back();
+        this.thenClick('[value=Back]');
         modulesCount -= 1;
     }
 });
