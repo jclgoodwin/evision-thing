@@ -34,15 +34,19 @@ casper.then(function () {
     this.echo(this.evaluate(function () {
         return document.getElementById('sitspagecontent').getElementsByTagName('table')[1].outerHTML;
     }));
-    var modulesCount = this.evaluate(function () {
-        return document.getElementsByName('butselect').length;
-    });
+    var modulesSelector = 'table[summary="module details and assessment marks"] tbody tr',
+        modulesCount = this.evaluate(function (selector) {
+            return document.querySelectorAll(selector).length;
+        }, modulesSelector),
+        getModuleButtonSelector = function (i) {
+            return modulesSelector + ':nth-child(' + i + ') input';
+        };
 
     // visit each 'component details' page:
-    while (modulesCount > 0) {
-        if (this.exists('table > tbody > tr:nth-child(' + modulesCount + ') input')) {
-            // 'assessment components' table
-            this.thenClick('table > tbody > tr:nth-child(' + modulesCount + ') input');
+    casper.repeat(modulesCount, function () {
+        if (this.exists(getModuleButtonSelector(modulesCount + 1))) {
+            this.thenClick(getModuleButtonSelector(modulesCount + 1));
+            // 'assessment components' table:
             this.then(function () {
                 this.echo(this.evaluate(function () {
                     return document.getElementById('sitspagecontent').getElementsByTagName('table')[2].outerHTML;
@@ -51,7 +55,7 @@ casper.then(function () {
             this.thenClick('[value=Back]');
         }
         modulesCount -= 1;
-    }
+    });
 });
 
 casper.run();
