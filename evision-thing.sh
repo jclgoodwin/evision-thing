@@ -13,7 +13,7 @@ fi
 
 OUTPUT=`casperjs evision-thing.js --username="$USERNAME" --password="$PASSWORD" | html-to-text --tables=.default`
 
-if [[ $OUTPUT == 'null' ]]; then
+if [[ $OUTPUT =~ 'null' ]]; then
    echo 'There was a problem. Perhaps you are running this thing too frequently.'
    exit 1
 elif [ -a output-latest.txt ]; then # script has been run before
