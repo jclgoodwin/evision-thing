@@ -44,8 +44,8 @@ casper.then(function () {
 
     // visit each 'component details' page:
     casper.repeat(modulesCount, function () {
-        if (this.exists(getModuleButtonSelector(modulesCount + 1))) {
-            this.thenClick(getModuleButtonSelector(modulesCount + 1));
+        if (this.exists(getModuleButtonSelector(modulesCount))) {
+            this.thenClick(getModuleButtonSelector(modulesCount));
             // 'assessment components' table:
             this.then(function () {
                 this.echo(this.evaluate(function () {
